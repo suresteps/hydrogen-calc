@@ -7,62 +7,9 @@ st.set_page_config(page_title="Hydrogen Calculator", layout="wide")
 st.title("Hydrogen Calculator")
 
 # Create tabs for the two calculators
-tab1, tab2 = st.tabs(["Payment Options Calculator", "ROI Calculator"])
+tab1, tab2 = st.tabs(["ROI Calculator", "Payment Options Calculator"])
 
 with tab1:
-    st.header("Payment Options Calculator")
-
-    # Unit configuration
-    st.subheader("Unit Configuration")
-    col1, col2 = st.columns([1, 2])
-
-    with col1:
-        unit_count = st.number_input("Number of Units", min_value=1, value=1, step=1)
-
-    unit_price = 10000  # Fixed unit price
-    total_cost = unit_price * unit_count
-
-    with col2:
-        st.metric("Total Cost", f"${total_cost:,.2f}")
-
-    # Calculate payment options
-    st.subheader("Payment Options")
-
-    # Function to calculate payment options
-    def calculate_option(name, down_percent, total_amount):
-        down_amount = total_amount * (down_percent / 100)
-        remaining = total_amount - down_amount
-        monthly_payment = remaining / 11
-
-        return {
-            "name": name,
-            "down_percent": down_percent,
-            "down_amount": down_amount,
-            "monthly_payment": monthly_payment,
-        }
-
-    # Calculate the three options
-    options = [
-        calculate_option("Option 1", 50, total_cost),
-        calculate_option("Option 2", 25, total_cost),
-        calculate_option("Option 3", 15, total_cost),
-    ]
-
-    # Display options in columns
-    cols = st.columns(3)
-
-    for i, option in enumerate(options):
-        with cols[i]:
-            st.markdown(f"### {option['name']}")
-            st.markdown(f"**{option['down_percent']}% Down**")
-            st.markdown(f"Initial Down Payment: **${option['down_amount']:,.2f}**")
-            st.markdown(f"11 Monthly Payments: **${option['monthly_payment']:,.2f}**")
-            st.markdown("---")
-            st.markdown(
-                f"Total Payment: ${option['down_amount']:,.2f} + (11 × ${option['monthly_payment']:,.2f}) = ${total_cost:,.2f}"
-            )
-
-with tab2:
     st.header("ROI Calculator")
 
     # Input for annual fuel cost
@@ -122,3 +69,56 @@ with tab2:
         f"<h2 style='color:{savings_color}'>${four_year_savings:,.2f}</h2>",
         unsafe_allow_html=True,
     )
+
+with tab2:
+    st.header("Payment Options Calculator")
+
+    # Unit configuration
+    st.subheader("Unit Configuration")
+    col1, col2 = st.columns([1, 2])
+
+    with col1:
+        unit_count = st.number_input("Number of Units", min_value=1, value=1, step=1)
+
+    unit_price = 10000  # Fixed unit price
+    total_cost = unit_price * unit_count
+
+    with col2:
+        st.metric("Total Cost", f"${total_cost:,.2f}")
+
+    # Calculate payment options
+    st.subheader("Payment Options")
+
+    # Function to calculate payment options
+    def calculate_option(name, down_percent, total_amount):
+        down_amount = total_amount * (down_percent / 100)
+        remaining = total_amount - down_amount
+        monthly_payment = remaining / 11
+
+        return {
+            "name": name,
+            "down_percent": down_percent,
+            "down_amount": down_amount,
+            "monthly_payment": monthly_payment,
+        }
+
+    # Calculate the three options
+    options = [
+        calculate_option("Option 1", 50, total_cost),
+        calculate_option("Option 2", 25, total_cost),
+        calculate_option("Option 3", 15, total_cost),
+    ]
+
+    # Display options in columns
+    cols = st.columns(3)
+
+    for i, option in enumerate(options):
+        with cols[i]:
+            st.markdown(f"### {option['name']}")
+            st.markdown(f"**{option['down_percent']}% Down**")
+            st.markdown(f"Initial Down Payment: **${option['down_amount']:,.2f}**")
+            st.markdown(f"11 Monthly Payments: **${option['monthly_payment']:,.2f}**")
+            st.markdown("---")
+            st.markdown(
+                f"Total Payment: ${option['down_amount']:,.2f} + (11 × ${option['monthly_payment']:,.2f}) = ${total_cost:,.2f}"
+            )
