@@ -9,6 +9,11 @@ st.title("Hydrogen Calculator")
 # Create tabs for the two calculators
 tab1, tab2 = st.tabs(["ROI Calculator", "Payment Options Calculator"])
 
+# Define unit price as an input at the top level so it's shared between tabs
+unit_price = st.sidebar.number_input(
+    "Unit Price ($)", min_value=1000, value=10000, step=1000, format="%.2f"
+)
+
 with tab1:
     st.header("ROI Calculator")
 
@@ -22,7 +27,6 @@ with tab1:
     )
 
     # Calculate derived values
-    unit_price = 10000  # Fixed unit price
     potential_savings = annual_fuel_cost * 0.1  # 10% savings
 
     # Calculate breakeven in months
@@ -80,7 +84,6 @@ with tab2:
     with col1:
         unit_count = st.number_input("Number of Units", min_value=1, value=1, step=1)
 
-    unit_price = 10000  # Fixed unit price
     total_cost = unit_price * unit_count
 
     with col2:
