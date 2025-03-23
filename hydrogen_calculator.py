@@ -9,29 +9,41 @@ st.title("Hydrogen Calculator")
 # Create tabs for the two calculators
 tab1, tab2 = st.tabs(["ROI Calculator", "Payment Options Calculator"])
 
-# Define unit price as an input at the top level so it's shared between tabs
-unit_price = st.sidebar.number_input(
-    "Unit Price ($)", min_value=1000, value=10000, step=1000, format="%.2f"
-)
-
 with tab1:
     st.header("ROI Calculator")
 
-    # Input for annual fuel cost
-    annual_fuel_cost = st.number_input(
-        "Annual diesel fuel cost for longest route ($)",
-        min_value=0.0,
-        value=0.0,
-        step=1000.0,
-        format="%.2f",
-    )
+    # Inputs section with two columns
+    input_col1, input_col2 = st.columns(2)
+
+    with input_col1:
+        # Input for annual fuel cost
+        annual_fuel_cost = st.number_input(
+            "Annual diesel fuel cost for longest route ($)",
+            min_value=0.0,
+            value=0.0,
+            step=1000.0,
+            format="%.2f",
+        )
+
+    with input_col2:
+        # Input for unit price in the ROI tab
+        unit_price_roi = st.number_input(
+            "Unit Price ($)",
+            min_value=1000.0,
+            value=10000.0,
+            step=1000.0,
+            format="%.2f",
+            key="unit_price_roi",
+        )
 
     # Calculate derived values
     potential_savings = annual_fuel_cost * 0.1  # 10% savings
 
     # Calculate breakeven in months
     breakeven_months = (
-        (unit_price / potential_savings) * 12 if potential_savings > 0 else float("inf")
+        (unit_price_roi / potential_savings) * 12
+        if potential_savings > 0
+        else float("inf")
     )
 
     # Calculate monthly values
@@ -39,14 +51,14 @@ with tab1:
     monthly_savings = potential_savings / 12
 
     # Calculate 4-year savings
-    four_year_savings = (potential_savings * 4) - unit_price
+    four_year_savings = (potential_savings * 4) - unit_price_roi
 
     # Display calculated values
     col1, col2 = st.columns(2)
 
     with col1:
         st.metric("Potential annual savings (10%)", f"${potential_savings:,.2f}")
-        st.metric("Unit price", f"${unit_price:,.2f}")
+        st.metric("Unit price", f"${unit_price_roi:,.2f}")
 
     with col2:
         if breakeven_months != float("inf"):
@@ -79,14 +91,25 @@ with tab2:
 
     # Unit configuration
     st.subheader("Unit Configuration")
-    col1, col2 = st.columns([1, 2])
+    col1, col2, col3 = st.columns([1, 1, 1])
 
     with col1:
         unit_count = st.number_input("Number of Units", min_value=1, value=1, step=1)
 
-    total_cost = unit_price * unit_count
-
     with col2:
+        # Input for unit price in the Payment Options tab
+        unit_price_payment = st.number_input(
+            "Unit Price ($)",
+            min_value=1000.0,
+            value=10000.0,
+            step=1000.0,
+            format="%.2f",
+            key="unit_price_payment",
+        )
+
+    total_cost = unit_price_payment * unit_count
+
+    with col3:
         st.metric("Total Cost", f"${total_cost:,.2f}")
 
     # Calculate payment options
